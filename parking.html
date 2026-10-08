@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주차 요금 계산기</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7ff, #dfe9ff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .card {
+            width: 420px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #1f2d3d;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #2d3a4a;
+        }
+        input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #c7d2e0;
+            border-radius: 10px;
+            margin-bottom: 18px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #4f7cff, #6a5efb);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px rgba(79, 124, 255, 0.25);
+        }
+        .result {
+            margin-top: 22px;
+            background: #f3f7ff;
+            border: 1px solid #dfe8ff;
+            border-radius: 12px;
+            padding: 18px;
+            color: #223958;
+            line-height: 1.6;
+        }
+        .result strong {
+            color: #102b59;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>주차 요금 계산기</h1>
+
+        <label for="minutes">주차 시간을 입력하세요 (분)</label>
+        <input id="minutes" type="number" min="0" placeholder="예: 75">
+
+        <button onclick="calculateParkingFee()">요금 계산</button>
+
+        <div class="result" id="result">
+            결과가 여기에 표시됩니다.
+        </div>
+    </div>
+
+    <script>
+        function calculateParkingFee() {
+            const minutes = Number(document.getElementById('minutes').value);
+            const resultBox = document.getElementById('result');
+
+            if (minutes <= 0 || isNaN(minutes)) {
+                resultBox.innerHTML = '<strong>오류:</strong> 올바른 시간을 입력해주세요.';
+                return;
+            }
+
+            let fee = 0;
+            let message = '';
+
+            if (minutes <= 30) {
+                fee = 0;
+                message = '30분 이하는 무료입니다.';
+            } else if (minutes <= 60) {
+                fee = 1000;
+                message = '30분 초과 ~ 1시간까지 1,000원입니다.';
+            } else if (minutes <= 120) {
+                fee = 2000;
+                message = '1시간 초과 ~ 2시간까지 2,000원입니다.';
+            } else if (minutes <= 180) {
+                fee = 3000;
+                message = '2시간 초과 ~ 3시간까지 3,000원입니다.';
+            } else {
+                const extra30 = Math.ceil((minutes - 180) / 30);
+                fee = 3000 + extra30 * 1000;
+                message = '3시간 초과: 추가 30분마다 1,000원씩 추가됩니다.';
+            }
+
+            resultBox.innerHTML = `
+                <strong>주차 시간:</strong> ${minutes}분<br>
+                <strong>요금:</strong> ${fee.toLocaleString()}원<br>
+                <strong>안내:</strong> ${message}
+            `;
+        }
+    </script>
+</body>
+</html>
